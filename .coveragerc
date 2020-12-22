@@ -1,0 +1,5 @@
+[run]
+source = jerome
+omit = 
+        */__main__.py
+        */downloader.py
