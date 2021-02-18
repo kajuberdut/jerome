@@ -155,11 +155,12 @@ assert replacer(untransformed, replacements, reverse=True) == text
 
   |step|result|
   |----|------|
-  |Original Text length:| 64819|
-  |With words replaced:| 23328|
-  |Burrows Wheeler Transformed and run length encoded:| 11668|
+  |Original Text length:| 64,819|
+  |With words replaced:| 23,328|
+  |Burrows Wheeler Transformed and run length encoded:| 11,668|
   |Reasonable dict representation length:| 966|
-  |Compressed size %:| 0.19|
+  |Dict + Processed Text:| 12,634|
+  |Compressed size:| 19%|
   |Total time:|  458.293 ms|
 
   **NOTE 1:** *This is a very artificial text, real results will vary.*  
