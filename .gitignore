@@ -1,6 +1,6 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
-*.py[cod]
+*.py[co]
 *$py.class
 
 # C extensions
@@ -106,3 +106,10 @@ config.json
 #Log
 log.txt
 */times/*.json
+
+#Docs
+# exclude everything
+jerome/docs/*
+
+# exception to the rule
+!jerome/docs/.gitkeep 

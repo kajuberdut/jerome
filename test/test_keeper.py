@@ -1,45 +1,36 @@
+from sys import getsizeof
+
 import pytest
-from jerome import k
-from jerome.keeper import KeepCase
+from jerome.keeper import SymbolKeeper
 
 
-def test_keeper(printable):
+def test_keeper(printable, k):
     s = next(k)
     assert s not in printable
 
 
-def test_keep():
+def test_keep(k):
     s = next(k)
-    word_case = KeepCase['WORD']
-    k.keep(s, keep_case=word_case)
-    assert k[s].symbol == s
-    assert k[s].symbol in k.filter_kept(word_case)
-    assert k[s].keep_case == word_case
+    k.keep(s)
+    assert isinstance(k[s], str)
     k.release(s)
     with pytest.raises(KeyError):
         k[s]
 
 
-def test_printable(printable):
-    reconstructed = set(k.PRINTABLE + k.MARK)
-    for ch in printable:
-        assert ch in reconstructed
-
-
-def test_numbers(numbers):
-    n = k.NUMBERS
-    for d in numbers:
-        assert d in n
-
-
-def test_size():
+def test_size(k):
     s = next(k)
-    k.keep(s, KeepCase['WORD'])
-    size = k[s].size
-    assert (50 <= size <= 76)
+    k.keep(s)
+    size = getsizeof(k[s])
+    assert 50 <= size <= 76
 
 
-def test_repr():
+def test_repr(k):
     s = next(k)
-    k.keep(s, KeepCase['WORD'])
+    k.keep(s)
     repr(k[s])
+
+
+def test_all():
+    new_k = SymbolKeeper()
+    l = list(new_k)

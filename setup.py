@@ -10,15 +10,14 @@ def read(fname):
 
 setup(
     name="jerome",
-    version="0.0.1",
+    version="0.0.2",
     author="Patrick Shechet",
     author_email="patrick.shechet@gmail.com",
     description=("String Processing Tools"),
     license="BSD",
     packages=find_packages(),
     include_package_data=True,
-    long_description=read("README"),
-    install_requires=["msgpack", "click", "typer"],
+    long_description=read("README.md"),
     entry_points={
         "console_scripts": ["nce=jerome.__main__"],
     },
@@ -27,7 +26,7 @@ setup(
         "Topic :: Text Editors :: Word Processors",
         "License :: OSI Approved :: BSD License",
         "Natural Language :: English",
-        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3 :: Only",
     ],
 )

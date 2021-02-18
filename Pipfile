@@ -8,15 +8,13 @@ black = "*"
 flake8 = "*"
 pytest = "*"
 coverage = "*"
-
-[packages]
-jerome = {editable = true, path = "."}
-msgpack = "*"
-click = "*"
-typer = "*"
+nuitka = "*"
 
 [requires]
-python_version = "3.9"
+python_version = "3.8"
 
 [pipenv]
 allow_prereleases = true
+
+[packages]
+jerome = {editable = true, path = "."}

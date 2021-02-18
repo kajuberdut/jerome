@@ -1,8 +1,8 @@
 import dataclasses
-import string
 import typing as t
+from collections.abc import Iterable
+from functools import singledispatchmethod
 from sys import getsizeof
-from enum import Enum
 
 
 def get_symbols(
@@ -19,71 +19,30 @@ def get_symbols(
     )
 
 
-class KeepCase(Enum):  # pragma: no cover
-    NUMBER = 1
-    MARK = 2
-    GLOSS = 3
-    WORD = 4
-    UNKNOWN = 5
-
-
-@dataclasses.dataclass
-class KeptSymbol:
-    symbol: str
-    keeper: "SymbolKeeper" = None
-    keep_case: KeepCase = KeepCase(5)
-
-    def __repr__(self):
-        return f"{self.symbol}, {self.keep_case.name}"
-
-    @property
-    def size(self):
-        return getsizeof(self.symbol)
-
-
 @dataclasses.dataclass
 class SymbolKeeper:
-    kept: t.Dict[str, KeptSymbol] = dataclasses.field(default_factory=dict)
-    _PRINTABLE: str = string.printable
-    NUMBER_MASK: str = "\x00\x01\x02\x03\x04\x05\x06\x07\x08\x0e"
-    MARK: str = "$"
+    kept: t.Dict[str, str] = dataclasses.field(default_factory=dict)
+    max_cost: int = 76
+    reserved: set = dataclasses.field(default_factory=set)
 
     def __post_init__(self):
-        self.keep(self.MARK, KeepCase["MARK"])
-        [self.keep(s, KeepCase["NUMBER"]) for s in self.NUMBER_MASK]
         self._symbol_generator = get_symbols(max_cost=76)
 
-    @property
-    def PRINTABLE(self):
-        return self._PRINTABLE.replace(self.MARK, "")
+    @singledispatchmethod
+    def keep(self, symbol) -> None:
+        raise ValueError("symbol should be a str or iterable of str or tuples.")
 
-    @property
-    def NUMBERS(self):
-        return string.digits
+    @keep.register
+    def _(self, symbol: str, replacement: str = None):
+        self.kept[symbol] = replacement if replacement is not None else next(self)
 
-    @property
-    def number_cypher(self):
-        return {str(k): v for (k, v) in enumerate(self.NUMBER_MASK)}
-
-    @property
-    def reverse_number_cypher(self):
-        return {v: k for (k, v) in self.number_cypher.items()}
-
-    @property
-    def reserved(self) -> set:
-        r = set(self.NUMBER_MASK).union(self.PRINTABLE).union(self.MARK)
-        return r
-
-    def keep(self, symbol: str, keep_case: t.Optional[KeepCase] = None):
-        for c in symbol:
-            self.kept[c] = KeptSymbol(symbol=symbol, keeper=self, keep_case=keep_case)
+    @keep.register
+    def _(self, symbol: Iterable) -> None:
+        [self.keep(c) for c in symbol]
 
     def release(self, s: str):
         for c in s:
             del self.kept[c]
-
-    def filter_kept(self, keep_case: KeepCase):
-        return {k: v for k, v in self.kept.items() if v.keep_case == keep_case}
 
     def __iter__(self):  # pragma: no cover
         return self
@@ -98,5 +57,17 @@ class SymbolKeeper:
             )
         return ch
 
-    def __getitem__(self, character: str) -> KeptSymbol:
+    def __getitem__(self, character: str) -> str:
         return self.kept[character]
+
+if __name__ == "__main__":
+    import string
+
+
+    k = SymbolKeeper()
+    k.keep('a', )
+    print(k['a'])
+
+    k.keep(list(string.digits))
+    print(k['1'])
+    print(len(k.kept))

@@ -1,10 +1,30 @@
 import string
 
 import pytest
-from jerome import NumberCruncher, UnCruncher, k
-from jerome.burrowswheeler import bwt
+from jerome.bw.burrowswheeler import bwt
 from jerome.glosser import degloss
+from jerome.keeper import SymbolKeeper
 from jerome.runlength import rle
+
+
+def pytest_addoption(parser):
+    parser.addoption(
+        "--runslow", action="store_true", default=False, help="run slow tests"
+    )
+
+
+def pytest_configure(config):
+    config.addinivalue_line("markers", "slow: mark test as slow to run")
+
+
+def pytest_collection_modifyitems(config, items):
+    if config.getoption("--runslow"):
+        # --runslow given in cli: do not skip slow tests
+        return
+    skip_slow = pytest.mark.skip(reason="need --runslow option to run")
+    for item in items:
+        if "slow" in item.keywords:
+            item.add_marker(skip_slow)
 
 
 @pytest.fixture(scope="session")
@@ -57,23 +77,8 @@ def runbwtjabber(bwtjabber):
 
 
 @pytest.fixture(scope="session")
-def number_replacer():
-    return NumberCruncher
-
-
-@pytest.fixture(scope="session")
-def number_restorer():
-    return UnCruncher
-
-
-@pytest.fixture(scope="session")
 def numbers():
     return string.digits
-
-
-@pytest.fixture(scope="session")
-def normal_use():
-    return k.PRINTABLE
 
 
 @pytest.fixture(scope="session")
@@ -82,11 +87,15 @@ def glossy():
 
 
 @pytest.fixture(scope="session")
-def deglossed(glossy):
-    deglossed, glossfile = degloss(glossy)
+def deglossed(glossy, glossmark):
+    deglossed, glossfile = degloss(glossy, glossmark)
     return (deglossed, glossfile)
 
 
 @pytest.fixture(scope="session")
 def printable():
     return string.printable
+
+@pytest.fixture(scope="session")
+def k(printable):
+    return SymbolKeeper(reserved=printable)
