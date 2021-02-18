@@ -33,7 +33,7 @@
 <br />
 <p align="center">
   <a href="https://github.com/kajuberdut/Jerome">
-    <img src="https://github.com/kajuberdut/Jerome/blob/main/images/logo.svg?raw=true" alt="Logo" width="80" height="80">
+    <img src="https://raw.githubusercontent.com/kajuberdut/jerome/main/images/Logo.svg" alt="Logo" width="80" height="80">
   </a>
 
   <h3 align="center">Jerome</h3>
