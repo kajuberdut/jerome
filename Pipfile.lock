@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "e9c877e18c5ff24442f130e2e75de5e0e3702d43d4b7334dffd3bab665be5ae5"
+            "sha256": "4aa61246ee9758421374c27d6504ca48d9b5f795821c3eb23448b16ab5c34aea"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -19,13 +19,6 @@
         "jerome": {
             "editable": true,
             "path": "."
-        },
-        "nimporter": {
-            "hashes": [
-                "sha256:6e75261df9f352f4e71f498cd49be49674516ecafee393972235e2014521a168"
-            ],
-            "index": "pypi",
-            "version": "==1.0.4"
         }
     },
     "develop": {

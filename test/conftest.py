@@ -1,7 +1,7 @@
 import string
 
 import pytest
-from jerome.bw.burrowswheeler import bwt
+from jerome.bw.burrowswheeler import forward_bw
 from jerome.glosser import degloss
 from jerome.keeper import SymbolKeeper
 from jerome.runlength import rle
@@ -67,13 +67,13 @@ All mimsy were the borogoves,
 
 
 @pytest.fixture(scope="session")
-def bwtjabber(jabber):
-    return bwt(jabber)
+def forward_bwjabber(jabber):
+    return forward_bw(jabber)
 
 
 @pytest.fixture(scope="session")
-def runbwtjabber(bwtjabber):
-    return rle(bwtjabber)
+def runforward_bwjabber(forward_bwjabber):
+    return rle(forward_bwjabber)
 
 
 @pytest.fixture(scope="session")

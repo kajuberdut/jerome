@@ -1,35 +1,33 @@
 from datetime import datetime
 
-from jerome.bw.burrowswheeler import bwt, ibwt
+from jerome.bw.burrowswheeler import forward_bw, reverse_bw
+from jerome.bw import nim_bw
 
-import nbw  # type: ignore
-
-
-s = "banana" * 10000
+s = "banana" * 5000
 
 start = datetime.now()
-presult1 = bwt(s)
+presult1 = forward_bw(s)
 end = datetime.now()
-print(f"Python Forward BWT time: {(end-start).total_seconds() * 1000.0} ms")
+print(f"Python Forward forward_bw time: {(end-start).total_seconds() * 1000.0} ms")
 
 
 start = datetime.now()
-presult2 = ibwt(presult1)
+presult2 = reverse_bw(presult1)
 end = datetime.now()
-print(f"Python Reverse BWT time: {(end-start).total_seconds() * 1000.0} ms")
+print(f"Python Reverse forward_bw time: {(end-start).total_seconds() * 1000.0} ms")
 
 assert presult2 == s
 
 start = datetime.now()
-nresult1 = nbw.bwt(s)
+nresult1 = nim_bw.forward_bw(s)
 end = datetime.now()
-print(f"Nim Forward BWT time: {(end-start).total_seconds() * 1000.0} ms")
+print(f"Nim Forward forward_bw time: {(end-start).total_seconds() * 1000.0} ms")
 
 assert nresult1 == presult1
 
 start = datetime.now()
-nresult2 = nbw.ibwt(nresult1)
+nresult2 = nim_bw.reverse_bw(nresult1)
 end = datetime.now()
-print(f"Nim Reverse BWT time: {(end-start).total_seconds() * 1000.0} ms")
+print(f"Nim Reverse forward_bw time: {(end-start).total_seconds() * 1000.0} ms")
 
 assert nresult2 == s

@@ -1,10 +1,9 @@
 import re
-from functools import partial
 
 runs = re.compile(r"([^0-9])\1+")
 antiruns = re.compile(r"([^0-9])([0-9]+)")
 
-def rle(text: str) -> str:
+def runlength_encode(text: str) -> str:
     """ Runlength encodes text.
         Text should not contain any numbers.
     """
@@ -13,7 +12,7 @@ def rle(text: str) -> str:
     )
 
 
-def unrle(text: str) -> str:
+def runlength_decode(text: str) -> str:
     """ Reverses runlength encoding on text
     """
     return antiruns.sub(lambda m: m.group(1) * int(m.group(2)), text)

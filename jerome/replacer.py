@@ -2,7 +2,7 @@ import re
 import typing as t
 
 
-def replace(text: str, replacements: t.Dict[str, str], reverse=False) -> str:
+def replacer(text: str, replacements: t.Dict[str, str], reverse=False) -> str:
     """ given replacements dict(k, v), replace all k with v in text and return."""
     if reverse:
         replacements = {v: k for k, v in replacements.items()}

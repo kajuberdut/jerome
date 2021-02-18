@@ -10,7 +10,7 @@ def read(fname):
 
 setup(
     name="jerome",
-    version="0.0.2",
+    version="0.1.0",
     author="Patrick Shechet",
     author_email="patrick.shechet@gmail.com",
     description=("String Processing Tools"),
@@ -18,9 +18,6 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     long_description=read("README.md"),
-    entry_points={
-        "console_scripts": ["nce=jerome.__main__"],
-    },
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Topic :: Text Editors :: Word Processors",

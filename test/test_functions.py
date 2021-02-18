@@ -1,7 +1,7 @@
 from sys import getsizeof  # noqa: E902
 
 import pytest
-from jerome.bw.burrowswheeler import bwt, ibwt
+from jerome.bw.burrowswheeler import forward_bw, reverse_bw
 from jerome.glosser import degloss, gloss
 from jerome.runlength import rle, unrle
 
@@ -11,14 +11,14 @@ def glossmark(k):
     return next(k)
 
 
-def test_bwt(jabber):
-    rolled = bwt(jabber)
+def test_forward_bw(jabber):
+    rolled = forward_bw(jabber)
     assert (len(rolled) - 1) == len(jabber)
 
 
-def test_ibwt(jabber, bwtjabber):
-    ibwted = ibwt(bwtjabber, mark="$")
-    assert ibwted == jabber
+def test_reverse_bw(jabber, forward_bwjabber):
+    reverse_bwed = reverse_bw(forward_bwjabber, mark="$")
+    assert reverse_bwed == jabber
 
 
 def test_runlength_encoding(jabber):
@@ -31,9 +31,9 @@ def test_runlength_encoding(jabber):
     assert jlen > rlen
 
 
-def test_runlength_restore(bwtjabber, runbwtjabber):
-    restored = unrle(runbwtjabber)
-    assert bwtjabber == restored
+def test_runlength_restore(forward_bwjabber, runforward_bwjabber):
+    restored = unrle(runforward_bwjabber)
+    assert forward_bwjabber == restored
 
 
 def test_deglosser(glossy, printable, glossmark):

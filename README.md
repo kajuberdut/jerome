@@ -39,7 +39,7 @@
   <h3 align="center">Jerome</h3>
 
   <p align="center">
-    A colllection of string functions that may or may not be useful.
+    A collection of string functions that may or may not be useful for compression.
   </p>
 </p>
 
@@ -57,7 +57,7 @@
     </li>
     <li><a href="#usage">Usage</a>
       <ul>
-        <li><a href="#further-examples">Further Examples</a></li>
+        <li><a href="#additional-documentation">Additional Documentation</a></li>
       </ul>
     </li>
     <li><a href="#roadmap">Roadmap</a></li>
@@ -73,9 +73,6 @@
 ## About The Project
 
 Jerome is a library of string functions written in pure Python -- With parallel implimentations in Nim and JavaScript.
-
-
-### Designed for easy integration / modification
 
 * 100% of functionality available in pure Python
 * No external dependencies
@@ -103,11 +100,15 @@ Here is an example showing basic usage.
 ```python
 from random import choice
 
-from jerome.bw.burrowswheeler import bwt, ibwt
-from jerome.common import common
-from jerome.keeper import SymbolKeeper
-from jerome.replacer import replace
-from jerome.runlength import rle, unrle
+from jerome import (
+    SymbolKeeper,
+    common,
+    forward_bw,
+    replacer,
+    reverse_bw,
+    runlength_decode,
+    runlength_encode,
+)
 
 WORD_COUNT = 10000
 MARK = " "  # Mark must be the lowest sorting character
@@ -131,38 +132,50 @@ replacements = {word: next(k) for word in common(text, min_length=4)}
 replacements[MARK] = next(k)
 # {'dolore': '\x00', 'elit,': '\x02', 'labore': '\x03', ...
 
-replaced = replace(text, replacements)
-transformed = bwt(replaced, mark=MARK)
+replaced = replacer(text, replacements)
+transformed = forward_bw(replaced, mark=MARK)
 
-runcoded = rle(transformed)
-print(f"""text length: {text_length}
-Words replaced: {len(replaced)}
-Run length encoded: {(rlen := len(runcoded))}
+runcoded = runlength_encode(transformed)
+print(
+    f"""Original Text length: {text_length}
+With words replaced: {len(replaced)}
+Burrows Wheeler Transformed and run length encoded: {(rlen := len(runcoded))}
 Reasonable dict representation length: {(dlen := len(str([(k,v) for k,v in replacements.items()])))}
 Compressed size %: {(rlen+dlen)/text_length}
-""")
+"""
+)
 
 # Reverse the whole thing
-assert (unruncoded := unrle(runcoded)) == transformed
-assert (untransformed := ibwt(unruncoded, mark=MARK)) == replaced
-assert replace(untransformed, replacements, reverse=True) == text
-
+assert (unruncoded := runlength_decode(runcoded)) == transformed
+assert (untransformed := reverse_bw(unruncoded, mark=MARK)) == replaced
+assert replacer(untransformed, replacements, reverse=True) == text
 ```
 
-It's darned simple.
+### Example compression of randomized text:
 
-### Further Examples
-* [Detailed explenation of the Burrows Wheeler Transform ](https://github.com/kajuberdut/Jerome/blob/main/jerome/bw/burrowswheeler.md)
-<!-- * [Statements](https://github.com/kajuberdut/Jerome/blob/main/examples/Statements.py) -->
+  |step|result|
+  |----|------|
+  |Original Text length:| 64819|
+  |With words replaced:| 23328|
+  |Burrows Wheeler Transformed and run length encoded:| 11668|
+  |Reasonable dict representation length:| 966|
+  |Compressed size %:| 0.19|
+  |Total time:|  458.293 ms|
+
+  **NOTE 1:** *This is a very artificial text, real results will vary.*  
+  **NOTE 2:** *Time was taken on a Ryzen 3600x @ 3.9Ghz.*
+  
+### Additional Documentation
+* [Burrows Wheeler Transform ](https://github.com/kajuberdut/Jerome/blob/main/jerome/bw/burrowswheeler.md)
 
 
 <!-- ROADMAP -->
 ## Roadmap
 
-Needed features:
-* JOIN between objects
-* Grouping/Aggregates
-* Order/Limit/Offset
+* [In place BWT](https://www.sciencedirect.com/science/article/pii/S1570866715000052)
+* Nim versions of all functions
+* js versions of all functions
+* Additional examples
 
 See the [open issues](https://github.com/kajuberdut/Jerome/issues) for a list of proposed features (and known issues).
 
