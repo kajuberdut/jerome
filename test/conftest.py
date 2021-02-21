@@ -4,7 +4,7 @@ import pytest
 from jerome.bw.burrowswheeler import forward_bw
 from jerome.glosser import degloss
 from jerome.keeper import SymbolKeeper
-from jerome.runlength import rle
+from jerome.runlength import runlength_encode
 
 
 def pytest_addoption(parser):
@@ -73,7 +73,7 @@ def forward_bwjabber(jabber):
 
 @pytest.fixture(scope="session")
 def runforward_bwjabber(forward_bwjabber):
-    return rle(forward_bwjabber)
+    return runlength_encode(forward_bwjabber)
 
 
 @pytest.fixture(scope="session")

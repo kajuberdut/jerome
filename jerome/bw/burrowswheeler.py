@@ -1,5 +1,5 @@
 
-def forward_bw(text: str, mark: str = " ") -> str:
+def forward_bw(text: str, mark: str = "\003") -> str:
     """Returns the Burrows Wheeler transform of text.
     Mark is by convention $
     Mark must be the lowest sort order character in text.
@@ -7,7 +7,7 @@ def forward_bw(text: str, mark: str = " ") -> str:
     if mark in text:
         raise ValueError(f"The mark '{mark}' exists in text.")
     matrix = [text + mark]
-    [matrix.append(matrix[-1][1:] + matrix[-1][:1]) for i in text if i != "$"]
+    [matrix.append(matrix[-1][1:] + matrix[-1][:1]) for i in text if i != mark]
     return "".join([i[-1] for i in sorted(matrix)])
 
 

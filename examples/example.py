@@ -1,5 +1,4 @@
-from random import choice
-from datetime import date, datetime
+from datetime import datetime
 
 from jerome import (
     SymbolKeeper,
@@ -9,21 +8,25 @@ from jerome import (
     reverse_bw,
     runlength_decode,
     runlength_encode,
+    sample_text,
 )
 
-WORD_COUNT = 10000
-MARK = " "  # Mark must be the lowest sorting character
+MARK = "\003"  # Mark must be the lowest sorting character in a text
 start = datetime.now()
 
-# Some good old Lorem Ipsum
-lorem = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-words = lorem.split()
-text = " ".join([choice(words) for i in range(WORD_COUNT)])
+# Let's take 100 sentences of procedurally generated text
+# from each of the bundles Markov seeds.
+text = " ".join(
+    [
+        sample_text(t).get_text(75)
+        for t in ["Pride and Prejudice", "Black Gate Speech", "Lorem Ipsum"]
+    ]
+)
 text_length = len(text)
 
 # SymbolKeeper is used to portion out un-used symbols
 k = SymbolKeeper(
-    reserved=set(list(lorem) + list("0123456789$" + MARK))
+    reserved=set(list(text) + list("0123456789$" + MARK))
 )  # These appear in our text so we don't want to use them as placeholders
 
 # common is a utility function for finding commonly occuring words

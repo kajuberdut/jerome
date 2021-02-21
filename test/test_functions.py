@@ -3,7 +3,7 @@ from sys import getsizeof  # noqa: E902
 import pytest
 from jerome.bw.burrowswheeler import forward_bw, reverse_bw
 from jerome.glosser import degloss, gloss
-from jerome.runlength import rle, unrle
+from jerome.runlength import runlength_encode, runlength_decode
 
 
 @pytest.fixture(scope="session")
@@ -17,12 +17,12 @@ def test_forward_bw(jabber):
 
 
 def test_reverse_bw(jabber, forward_bwjabber):
-    reverse_bwed = reverse_bw(forward_bwjabber, mark="$")
+    reverse_bwed = reverse_bw(forward_bwjabber)
     assert reverse_bwed == jabber
 
 
 def test_runlength_encoding(jabber):
-    run = rle(jabber)
+    run = runlength_encode(jabber)
     jsize = getsizeof(jabber)
     rsize = getsizeof(run)
     assert jsize > rsize
@@ -32,7 +32,7 @@ def test_runlength_encoding(jabber):
 
 
 def test_runlength_restore(forward_bwjabber, runforward_bwjabber):
-    restored = unrle(runforward_bwjabber)
+    restored = runlength_decode(runforward_bwjabber)
     assert forward_bwjabber == restored
 
 

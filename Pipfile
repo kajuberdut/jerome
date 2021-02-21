@@ -9,6 +9,7 @@ flake8 = "*"
 pytest = "*"
 coverage = "*"
 nuitka = "*"
+nimporter = "*"
 
 [requires]
 python_version = "3.8"

@@ -1,11 +1,14 @@
 # from Cython.Build import cythonize
 
-import os
+import pathlib
+
 from setuptools import setup, find_packages
 
+# The directory containing this file
+HERE = pathlib.Path(__file__).parent
 
-def read(fname):
-    return open(os.path.join(os.path.dirname(__file__), fname)).read()
+# The text of the README file
+README = (HERE / "README.md").read_text()
 
 
 setup(
@@ -14,15 +17,15 @@ setup(
     author="Patrick Shechet",
     author_email="patrick.shechet@gmail.com",
     description=("String Processing Tools"),
+    long_description=README,
+    long_description_content_type="text/markdown",
+    url="https://github.com/kajuberdut/jerome",
     license="BSD",
-    packages=find_packages(),
+    packages=find_packages(exclude=["js"]),
     include_package_data=True,
-    long_description=read("README.md"),
     classifiers=[
         "Development Status :: 3 - Alpha",
-        "Topic :: Text Editors :: Word Processors",
         "License :: OSI Approved :: BSD License",
-        "Natural Language :: English",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3 :: Only",
     ],

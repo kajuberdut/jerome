@@ -98,7 +98,7 @@ For information about cloning and dev setup see: [Contributing](#Contributing)
 Here is an example showing basic usage.
 
 ```python
-from random import choice
+from datetime import datetime
 
 from jerome import (
     SymbolKeeper,
@@ -108,20 +108,25 @@ from jerome import (
     reverse_bw,
     runlength_decode,
     runlength_encode,
+    sample_text,
 )
 
-WORD_COUNT = 10000
-MARK = " "  # Mark must be the lowest sorting character
+MARK = "\003"  # Mark must be the lowest sorting character in a text
+start = datetime.now()
 
-# Some good old Lorem Ipsum
-lorem = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-words = lorem.split()
-text = " ".join([choice(words) for i in range(WORD_COUNT)])
+# Let's take 100 sentences of procedurally generated text
+# from each of the bundles Markov seeds.
+text = " ".join(
+    [
+        sample_text(t).get_text(75)
+        for t in ["Pride and Prejudice", "Black Gate Speech", "Lorem Ipsum"]
+    ]
+)
 text_length = len(text)
 
 # SymbolKeeper is used to portion out un-used symbols
 k = SymbolKeeper(
-    reserved=set(list(lorem) + list("0123456789$" + MARK))
+    reserved=set(list(text) + list("0123456789$" + MARK))
 )  # These appear in our text so we don't want to use them as placeholders
 
 # common is a utility function for finding commonly occuring words
@@ -149,19 +154,20 @@ Compressed size %: {(rlen+dlen)/text_length}
 assert (unruncoded := runlength_decode(runcoded)) == transformed
 assert (untransformed := reverse_bw(unruncoded, mark=MARK)) == replaced
 assert replacer(untransformed, replacements, reverse=True) == text
+print(f"Total time:  {(datetime.now()-start).total_seconds() * 1000.0} ms")
 ```
 
 ### Example compression of randomized text:
 
   |step|result|
   |----|------|
-  |Original Text length:| 64,819|
-  |With words replaced:| 23,328|
-  |Burrows Wheeler Transformed and run length encoded:| 11,668|
-  |Reasonable dict representation length:| 966|
-  |Dict + Processed Text:| 12,634|
-  |Compressed size:| 19%|
-  |Total time:|  458.293 ms|
+  |Original Text length:| 22,131|
+  |With words replaced:| 15,630|
+  |Burrows Wheeler Transformed and run length encoded:| 4,682|
+  |Reasonable dict representation length:| 1,155|
+  |Dict + Processed Text:| 5,837|
+  |Compressed size:| 26%|
+  |Total time:|  452 ms|
 
   **NOTE 1:** *This is a very artificial text, real results will vary.*  
   **NOTE 2:** *Time was taken on a Ryzen 3600x @ 3.9Ghz.*
