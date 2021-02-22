@@ -1,1 +1,1 @@
-include seeds/*.seed
+include jerome/mseeds/*.mseed

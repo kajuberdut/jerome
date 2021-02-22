@@ -6,23 +6,12 @@ import random
 import typing as t
 from collections import defaultdict
 from functools import partial, singledispatchmethod
-from importlib import resources
-
-SEED_PATHS = {
-    "Pride and Prejudice": resources.path("jerome.seeds", "pride.seed"),
-    "Black Gate Speech": resources.path("jerome.seeds", "blackgate.seed"),
-    "Lorem Ipsum": resources.path("jerome.seeds", "loremipsum.seed"),
-}
-
-
-def sample_text(source_name="Lorem Ipsum") -> "Markov":
-    with SEED_PATHS[source_name] as f:
-        m = Markov.from_seedfile(f)
-    return m
+from pathlib import Path
 
 
 STX = "\002"
 ETX = "\003"
+CONTROL = {STX: -1, ETX: -2, -1: STX, -2: ETX}
 
 wcounter = partial(defaultdict, int)
 datadict = partial(defaultdict, wcounter)
@@ -53,17 +42,13 @@ class Markov:
         return m
 
     @classmethod
-    def from_seed(cls, seed: t.Dict) -> "Markov":
-        return cls(_words=seed["_words"], _data=cls.formatdata(seed["_data"]))
+    def from_mseed(cls, mseed: t.Dict) -> "Markov":
+        return cls(_words=mseed["_words"], _data=cls.formatdata(mseed["_data"]))
 
     @classmethod
-    def from_seedfile(cls, path: str) -> "Markov":
+    def from_mseedfile(cls, path: Path) -> "Markov":
         with bz2.open(path, "rb") as f:
-            return cls.from_seed(json.loads(f.read()))
-
-    def __post_init__(self):
-        self.add_word(STX)
-        self.add_word(ETX)
+            return cls.from_mseed(json.loads(f.read()))
 
     @property
     def key(self) -> int:
@@ -75,34 +60,38 @@ class Markov:
         return set(self._words)
 
     @singledispatchmethod
-    def add_word(self, w: str) -> None:
-        if w not in self._words:
-            self._words.append(w)
+    def add_word(self, word: str) -> None:
+        if word not in self._words:
+            self._words.append(word)
 
     @add_word.register
-    def _(self, w: list) -> None:
-        new = set(w).difference(self.words)
-        [self.add_word(w) for w in new]
+    def _(self, words: list) -> None:
+        [self.add_word(w) for w in words]
 
     @singledispatchmethod
     def _get(self, k: int) -> str:
-        return self._words[k]
+        if k in CONTROL:
+            return CONTROL[k]
+        else:
+            return self._words[k]
 
     @_get.register
     def _(self, k: str) -> int:
-        return self._words.index(k)
+        if k in CONTROL:
+            return CONTROL[k]
+        else:
+            return self._words.index(k)
 
     @property
     def start(self) -> int:
-        return self._get(STX)
+        return CONTROL[STX]
 
     @property
     def end(self) -> int:
-        return self._get(ETX)
+        return CONTROL[ETX]
 
     def ingest_bigram(self, b: t.Tuple[str, str]) -> None:
-        x, y = self._get(b[0]), self._get(b[1])
-        self._data[x][y] += 1
+        self._data[self._get(b[0])][self._get(b[1])] += 1
 
     @singledispatchmethod
     def ingest_sentence(self, s: t.List[str]) -> None:
@@ -116,14 +105,19 @@ class Markov:
 
     @singledispatchmethod
     def follows(self, leads: int) -> int:
-        p, w = zip(*self._data[leads].items())
+
+        try:
+            p, w = zip(*self._data[leads].items())
+        except ValueError:
+            return -2
         return random.choices(population=p, weights=w)[0]
 
     @follows.register
     def _(self, leads: str):
         return self.follows(self._get(leads))
 
-    def sentence(self, state: str = None):
+    def nsentence(self, state: str = None):
+        """ Return a list of ints representing a sentence. """
         if state is None:
             state = self.start
         result = []
@@ -131,16 +125,22 @@ class Markov:
             result.append((state := self.follows(state)))
         return result
 
+    def sentence(self, state: str = None):
+        """ Returns a text sentence. """
+        return self.translate(self.nsentence())
+
     def translate(self, s: t.List[int]) -> str:
-        return " ".join([self._get(i) for i in s])
+        return [self._get(i) for i in s if i > 0]
 
     def get_text(self, sentences: int) -> str:
-        return "\n".join([self.translate(self.sentence()) for i in range(sentences)])
+        return "\n".join(
+            [" ".join(self.sentence()).capitalize() for i in range(sentences)]
+        )
 
     @property
-    def seed(self):
+    def mseed(self):
         return {"_words": self._words, "_data": self._data}
 
     def save(self, path):
         with bz2.open(path, "wb") as f:
-            f.write(json.dumps(self.seed).encode("utf-8"))
+            f.write(json.dumps(self.mseed).encode("utf-8"))

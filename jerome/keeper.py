@@ -53,21 +53,25 @@ class SymbolKeeper:
             ch = next(
                 ch
                 for ch in self._symbol_generator
-                if ch not in self.reserved and ch not in self.kept
+                if ch not in self.reserved
+                and ch not in self.kept
+                and ch not in "0123456789\003\002\000\001"
             )
         return ch
 
     def __getitem__(self, character: str) -> str:
         return self.kept[character]
 
+
 if __name__ == "__main__":
     import string
 
-
     k = SymbolKeeper()
-    k.keep('a', )
-    print(k['a'])
+    k.keep(
+        "a",
+    )
+    print(k["a"])
 
     k.keep(list(string.digits))
-    print(k['1'])
+    print(k["1"])
     print(len(k.kept))

@@ -4,6 +4,8 @@ import typing as t
 
 def replacer(text: str, replacements: t.Dict[str, str], reverse=False) -> str:
     """ given replacements dict(k, v), replace all k with v in text and return."""
+    if len(replacements) == 0:
+        return text
     if reverse:
         replacements = {v: k for k, v in replacements.items()}
     # Place longer ones first to keep shorter substrings from matching where the longer ones should take place

@@ -10,13 +10,25 @@
 # when you make software releases of the extension module that it
 # describes.
 
-
+import io
+import typing
 
 # This is not Python source even if it looks so. Make it clear for
 # now. This was decided by PEP 484 designers.
 __name__ = ...
 
+import typing as t
+from io import StringIO
 
+STX = "\002"
+ETX = "\003"
+NEWLINE = "\n"
 
-def forward_bw(text: str, mark: str = "\003") -> str: ...
-def reverse_bw(text: str, mark: str = None) -> str: ...
+def split(
+    text: t.Optional[str] = None,
+    size: int = -1,
+) -> t.Iterator[str]: ...
+def forward_bw(
+    text: str, mark: str = ETX, split_marker=STX, split_size=5000
+) -> str: ...
+def reverse_bw(text: str, mark: str = ETX, split_marker=STX) -> str: ...

@@ -1,8 +1,6 @@
-# from Cython.Build import cythonize
-
 import pathlib
 
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 # The directory containing this file
 HERE = pathlib.Path(__file__).parent
@@ -13,7 +11,7 @@ README = (HERE / "README.md").read_text()
 
 setup(
     name="jerome",
-    version="0.1.0",
+    version="0.2.0",
     author="Patrick Shechet",
     author_email="patrick.shechet@gmail.com",
     description=("String Processing Tools"),
