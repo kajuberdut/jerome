@@ -33,7 +33,7 @@
 <br />
 <p align="center">
   <a href="https://github.com/kajuberdut/Jerome">
-    <img src="https://raw.githubusercontent.com/kajuberdut/jerome/main/images/Logo.svg" alt="Logo" width="80" height="80">
+    <img src="https://raw.githubusercontent.com/kajuberdut/jerome/main/images/Logo.svg" alt="Logo" width="160" height="160">
   </a>
 
   <h3 align="center">Jerome</h3>
@@ -74,8 +74,7 @@
 
 Jerome is a library of string functions written in pure Python -- With parallel implimentations in Nim and JavaScript.
 
-* 100% of functionality available in pure Python
-* No external dependencies
+* No hard dependencies
 * 100% test coverage
 
 
