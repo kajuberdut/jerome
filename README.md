@@ -39,7 +39,7 @@
   <h3 align="center">Jerome</h3>
 
   <p align="center">
-    A collection of string functions that may or may not be useful for compression.
+    A collection of functions that illustrate several techniques useful in text compression.
   </p>
 </p>
 
@@ -72,7 +72,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-Jerome is a library of string functions written in pure Python -- With parallel implimentations in Nim and JavaScript.
+Jerome is a library of string functions written in pure Python. The library's name is taken from St. Jerome of Stridon who is considered the patron saint of archivists.
 
 * No hard dependencies
 * 100% test coverage
