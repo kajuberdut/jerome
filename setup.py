@@ -13,9 +13,7 @@ with open(version_path, "r") as fh:
     version_dict = {}
     exec(fh.read(), version_dict)
     VERSION = version_dict["__version__"]
-
-print(VERSION)
-
+    
 setup(
     name="jerome",
     version=VERSION,
