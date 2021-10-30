@@ -8,19 +8,25 @@ HERE = pathlib.Path(__file__).parent
 # The text of the README file
 README = (HERE / "README.md").read_text()
 
+version_path = HERE / "jerome" / "__version__.py"
+with open(version_path, "r") as fh:
+    version_dict = {}
+    exec(fh.read(), version_dict)
+    VERSION = version_dict["__version__"]
+
+print(VERSION)
 
 setup(
     name="jerome",
-    version="0.2.0",
+    version=VERSION,
     author="Patrick Shechet",
     author_email="patrick.shechet@gmail.com",
     description=("String Processing Tools"),
     long_description=README,
     long_description_content_type="text/markdown",
     url="https://github.com/kajuberdut/jerome",
-    license="BSD",
-    packages=find_packages(exclude=["js"]),
-    include_package_data=True,
+    license="MIT",
+    packages=find_packages(),
     classifiers=[
         "Development Status :: 3 - Alpha",
         "License :: OSI Approved :: BSD License",

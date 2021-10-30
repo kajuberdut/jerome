@@ -74,9 +74,10 @@
 
 Jerome is a library of string functions written in pure Python. The library's name is taken from St. Jerome of Stridon who is considered the patron saint of archivists.
 
-* No hard dependencies
+* Zero dependencies[^1]
 * 100% test coverage
 
+[^1]: Examples use augustine_text to generate material to compress
 
 <!-- GETTING STARTED -->
 ## Getting Started
@@ -183,8 +184,7 @@ Python's built in bz2 is both many times faster and many time better at compress
 ## Roadmap
 
 * [In place BWT](https://www.sciencedirect.com/science/article/pii/S1570866715000052)
-* Nim versions of all functions
-* js versions of all functions
+* Huffman Coding
 * Additional examples
 
 See the [open issues](https://github.com/kajuberdut/Jerome/issues) for a list of proposed features (and known issues).
@@ -222,7 +222,7 @@ Contributions are what make the open source community such an amazing place to b
 <!-- LICENSE -->
 ## License
 
-Distributed under the BSD Two-clause License. See `LICENSE` for more information.
+Distributed under the MIT License. See `LICENSE` for more information.
 
 
 
@@ -246,7 +246,7 @@ Project Link: [https://github.com/kajuberdut/Jerome](https://github.com/kajuberd
 [stars-url]: https://github.com/kajuberdut/Jerome/stargazers
 [issues-shield]: https://img.shields.io/github/issues/kajuberdut/Jerome.svg?style=for-the-badge
 [issues-url]: https://github.com/kajuberdut/Jerome/issues
-[license-shield]: https://img.shields.io/badge/License-BSD%202--Clause-orange.svg?style=for-the-badge
+[license-shield]: https://img.shields.io/badge/License-MIT-orange.svg?style=for-the-badge
 [license-url]: https://github.com/kajuberdut/Jerome/blob/main/LICENSE
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://www.linkedin.com/in/patrick-shechet

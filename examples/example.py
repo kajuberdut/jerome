@@ -2,7 +2,7 @@ from datetime import datetime
 
 from jerome import (SymbolKeeper, common, forward_bw, replacer, reverse_bw,
                     runlength_decode, runlength_encode)
-from jerome.sample_text import words
+from augustine_text.sample_text import words
 
 
 # 75K words of procedurally generated text
